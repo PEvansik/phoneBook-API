@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
 
 
 let PORT = (process.env.PORT || 3000);
@@ -28,12 +31,7 @@ let phones = [
     }
 ]
 
-let phone;
-
-let pickPhone = (req, items) => {
-    const {id} = req.params
-    return phone = items.filter(p => p.id === +id)
-}
+let newId = () => phones.map(p => p.id).reduce((a, b) => Math.max(a, b), -Infinity);
 
 
 // 3.1:
@@ -41,7 +39,7 @@ let pickPhone = (req, items) => {
 // entries from the address http://localhost:3001/api/persons.
 
 app.get(`/api/persons`, (req, res) => {
-    res.json(phones)
+  res.json(phones)
 })
 
 // 3.2:
@@ -50,12 +48,7 @@ app.get(`/api/persons`, (req, res) => {
 //
 //${todat's date and time zone}"
 app.get(`/info/`, (req, res) => {
-
-    res.setHeader("Content-Type", "text/html")
-
-    res.write(`<p>Phonebook has info for ${phones.length} people </p>`);
-    res.write(`<p>${new Date()}<p>`);
-    res.end()
+  res.send(`<p>Phone book has entry for ${phones.length} people</p>`)
 })
 
 // 3.3:
@@ -64,29 +57,44 @@ app.get(`/info/`, (req, res) => {
 // 
 // If an entry for the given id is not found, the server has to respond with the appropriate status code.
 app.get(`/api/persons/:id`, (req,res) => {
+  const {id} = req.params;
+  let person = phones.find(p => p.id === +id)
 
-    pickPhone(req, phones, phone)
-    if (phone) {
-        console.log(phone)
-        res.json(phone)
-    }
-    // res.statusMessage = "The phone id is not valid"
-    res.status(404).end()
+  if (person) {
+    return res.json(person)
+  } else {
+    return res.status(404).end()
+  }
 })
 
 // 3.4:
 // Implement functionality that makes it possible to delete a single phonebook entry by making 
 // an HTTP DELETE request to the unique URL of that phonebook entry.
-app. delete(`/api/persons/:id`, (req, res) => {
-    pickPhone(req, phones, phone)
-    console.log(`${phones.length} persons are left`)
-
-    res.statusMessage = `phone ${phones.length} has been deleted`
-    res.status(204).end()
-    console.log(`${phones.length} has been deleted`)
-
+app.delete(`/api/persons/:id`, (req, res) => {
+  const {id} = req.params;
+  let remainingPersons = phones.filter(p => p.id !== +id)
+  console.log(remainingPersons)
+  res.status(204).end()
 })
 
+
+// 3.4:
+// Expand the backend so that new phonebook entries can be added by making 
+//HTTP POST requests to the address http://localhost:3001/api/persons.
+app.post(`/api/persons`, (req, res) => {
+  let customer = req.body
+
+  customer = {
+    id: (newId() + 1),
+    name: "Arto Hellas", 
+    number: "040-123456"
+  }
+
+  let totalCustomers = phones.push(customer)
+  console.log(totalCustomers)
+
+  res.json(phones)
+})
 
 
 app.listen(PORT)

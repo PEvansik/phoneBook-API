@@ -34,7 +34,7 @@ let phones = [
 let newId = () => phones.map(p => p.id).reduce((a, b) => Math.max(a, b), -Infinity);
 
 
-// 3.1:
+
 // Implement a Node application that returns a hardcoded list of phonebook 
 // entries from the address http://localhost:3001/api/persons.
 
@@ -42,7 +42,7 @@ app.get(`/api/persons`, (req, res) => {
   res.json(phones)
 })
 
-// 3.2:
+
 // Implement a page at the address http://localhost:3001/info that looks roughly like this
 // "Phonebook has info for 2 people
 //
@@ -51,7 +51,7 @@ app.get(`/info/`, (req, res) => {
   res.send(`<p>Phone book has entry for ${phones.length} people</p>`)
 })
 
-// 3.3:
+
 // Implement the functionality for displaying the information for a single phonebook entry. 
 // The url for getting the data for a person with the id 5 should be http://localhost:3001/api/persons/5
 // 
@@ -67,7 +67,7 @@ app.get(`/api/persons/:id`, (req,res) => {
   }
 })
 
-// 3.4:
+
 // Implement functionality that makes it possible to delete a single phonebook entry by making 
 // an HTTP DELETE request to the unique URL of that phonebook entry.
 app.delete(`/api/persons/:id`, (req, res) => {
@@ -78,7 +78,7 @@ app.delete(`/api/persons/:id`, (req, res) => {
 })
 
 
-// 3.5:
+
 // Expand the backend so that new phonebook entries can be added by making 
 //HTTP POST requests to the address http://localhost:3001/api/persons.
 // AND

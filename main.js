@@ -78,22 +78,37 @@ app.delete(`/api/persons/:id`, (req, res) => {
 })
 
 
-// 3.4:
+// 3.5:
 // Expand the backend so that new phonebook entries can be added by making 
 //HTTP POST requests to the address http://localhost:3001/api/persons.
+// AND
+// 3.6: Phonebook backend step6
+// Implement error handling for creating new entries. The request is not allowed to succeed, if:
+// a. The name or number is missing
+// b. The name already exists in the phonebook
+// Respond to requests like these with the appropriate status code, and also send back 
+// information that explains the reason for the error, :
+
 app.post(`/api/persons`, (req, res) => {
+  res.setHeader("Content-Type", "application/json")
   let customer = req.body
 
   customer = {
     id: (newId() + 1),
-    name: "Arto Hellas", 
-    number: "040-123456"
+    name: "Jemall", 
+    number: "040-123e46"
   }
 
-  let totalCustomers = phones.push(customer)
-  console.log(totalCustomers)
+  let existingName = phones.map(p => p.name).find(n => customer.name === n)
 
-  res.json(phones)
+  if (customer.name === null || customer.number === null ||  existingName ) {
+    console.log(phones)
+    return res.status(305).send({error: "name must be unique"})
+  }else {
+    let totalCustomers = phones.push(customer)
+    console.log(totalCustomers)
+    return res.json(phones)
+  }
 })
 
 
